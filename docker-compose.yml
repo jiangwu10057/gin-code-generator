@@ -1,0 +1,19 @@
+version: '3.7'
+networks:
+  component_net:
+    driver: bridge
+    external: true
+services:
+  gcg:
+    build:
+      context: .
+      dockerfile: ./build/docker/air-dockerfile
+    image: gcg
+    container_name: gcg
+    restart: always
+    networks:
+      - component_net
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/golang

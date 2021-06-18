@@ -1,0 +1,16 @@
+FROM cosmtrek/air:v1.15.1
+
+# 设置golang path、go mod proxy
+ENV GOPROXY=https://goproxy.cn,https://goproxy.io,direct \
+    GO111MODULE=on \
+    CGO_ENABLED=1
+
+WORKDIR /golang
+
+COPY . .
+#ADD https://github.com/pwnlabs/oracle-instantclient/raw/master/instantclient-basic-linux.x64-11.2.0.4.0.zip .
+
+#set oracle path and build go app
+RUN sed -i "s@http://deb.debian.org@https://mirrors.aliyun.com@g" /etc/apt/sources.list && \
+    apt-get clean && apt-get update && \
+    go env -w GOPROXY=https://goproxy.cn,https://goproxy.io,direct

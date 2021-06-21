@@ -87,55 +87,6 @@ func TestNewTest(t *testing.T) {
 	assert.Equal(t, "/assets/code_template/test.tpl", test.TemplateFile)
 }
 
-func TestCheckModuleFail(t *testing.T) {
-	Config := internal.Config{
-		Module: "",
-		Name:   "",
-		Path:   "",
-		Author: "",
-	}
-
-	base := internal.Base{
-		Config: Config,
-	}
-
-	status, err := base.CheckModule()
-	assert.Equal(t, false, status)
-	assert.Equal(t, "module cannot be empty", err.Error())
-
-	Config = internal.Config{
-		Module: "module",
-		Name:   "",
-		Author: "",
-		Path:   "",
-	}
-
-	base = internal.Base{
-		Config: Config,
-	}
-
-	status, err = base.CheckModule()
-	assert.Equal(t, false, status)
-	assert.Equal(t, "module is unexpected,except values:'project','api','model','service','router','test'", err.Error())
-}
-
-func TestCheckModuleSuccsess(t *testing.T) {
-	Config := internal.Config{
-		Module: "api",
-		Name:   "",
-		Path:   "",
-		Author: "",
-	}
-
-	base := internal.Base{
-		Config: Config,
-	}
-
-	status, err := base.CheckModule()
-	assert.Equal(t, true, status)
-	assert.Equal(t, nil, err)
-}
-
 func TestInit(t *testing.T) {
 	Config := internal.Config{
 		Module: "api",

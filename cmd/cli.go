@@ -34,10 +34,11 @@ func main() {
 	pwd, _ := os.Getwd()
 	author, _ := os.Hostname()
 
-	flag.StringVar(&config.Module, "module", "project", "which module you want to generate.\noption:'project','model','service','router','test'")
+	flag.StringVar(&config.Module, "module", "project", "which module you want to generate.\noption:'project','model','service','router','quick'")
 	flag.StringVar(&config.Path, "path", pwd, "project root path,default is current path")
 	flag.StringVar(&config.Author, "author", author, "code author,default is computer name")
 	flag.StringVar(&config.Name, "name", "", "name for module")
+	flag.BoolVar(&config.WithTest, "withtest", false, "do you want to generate test file in the same time?defualt is no")
 	showVersion := flag.Bool("v", false, "print version")
 
 	flag.Parse()
@@ -53,8 +54,8 @@ func main() {
 	}
 	var generator internal.Generator 
 	switch config.Module {
-		case "project":{
-			fmt.Println("tobe continue")
+		case "project", "quick":{
+			fmt.Println("to be continue")
 			os.Exit(ExitWrongUsage)
 		}
 		case "model":{
@@ -67,7 +68,7 @@ func main() {
 			generator = internal.NewRouter(config)
 		}
 		default:{
-			fmt.Println("wrong module")
+			fmt.Println("module is unexpected,except values:'project','api','model','service','router','quick'")
 			os.Exit(ExitWrongUsage)
 		}
 	}
@@ -85,7 +86,25 @@ func main() {
 		fmt.Println(err.Error())
 		os.Exit(exitCode)
 	}
+
+	if config.WithTest {
+		module := config.Module
+		config.Module = "test"
+		generator = internal.NewTest(config, module)
+		_, err = generator.Init()
+
+		if err != nil{
+			fmt.Println(err.Error())
+			os.Exit(exitCode)
+		}
 	
+		_,err = generator.Gen()
+	
+		if err != nil{
+			fmt.Println(err.Error())
+			os.Exit(exitCode)
+		}
+	}
 	fmt.Println("ok")
 	os.Exit(exitCode)
 }

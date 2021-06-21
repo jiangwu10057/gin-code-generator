@@ -14,6 +14,7 @@ type Config struct {
 	Name   string
 	Path   string
 	Author string
+	WithTest bool
 }
 
 type Generator interface {
@@ -37,8 +38,8 @@ type Project struct {
 	Base
 }
 
-func NewProject(config Config) *Project {
-	return &Project{
+func NewProject(config Config) Project {
+	return Project{
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
 			TargetPath:   "/",
@@ -127,9 +128,10 @@ type ModelTemplateData struct {
 
 type Test struct {
 	Base
+	Module string
 }
 
-func NewTest(config Config) *Test {
+func NewTest(config Config, module string) *Test {
 	return &Test{
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
@@ -138,28 +140,33 @@ func NewTest(config Config) *Test {
 			FileSuffix:   "_test.go",
 			Config:       config,
 		},
+		module,
 	}
 }
+
+// func NewQuick(config Config) {
+	// var newMap []Base{}
+	// for key, value := range []string{"service","model","router"} {
+	// 	switch value:
+	// 		case "service":{
+	// 			newMap = append(newMap, NewService(config))
+	// 		},
+	// 		case "model":{
+	// 			newMap = append(newMap, NewModel(config))
+	// 		},
+	// 		case "router":{
+	// 			newMap = append(newMap, NewRouter(config))
+	// 		}
+	// }
+
+	// return newMap
+// }
 
 type TestTemplateData struct {
 	TemplateData
 	Package  string
 	Function []string
 	//可以用 gotests工具自动生成
-}
-
-func (base *Base) CheckModule() (bool, error) {
-	if base.Config.Module == "" {
-		return false, errors.New("module cannot be empty")
-	}
-
-	base.Config.Module = strings.ToLower(base.Config.Module)
-
-	if !util.Contains([]string{"project", "api", "model", "service", "router", "test"}, base.Config.Module) {
-		return false, errors.New("module is unexpected,except values:'project','api','model','service','router','test'")
-	}
-
-	return true, nil
 }
 
 func (base *Base) Init() (bool, error) {
@@ -216,12 +223,16 @@ func (test *Test) BuildContent() (string, error) {
 			Date:   test.Date,
 			Name:   test.BuildName(),
 		},
-		Package: "",
+		Package: test.Module,
 	})
 }
 
 func (base *Base) GetTarget() string {
 	return base.Config.Path + base.TargetPath + base.BuildName() + base.FileSuffix
+}
+
+func (test *Test) GetTarget() string {
+	return test.Config.Path + "/" + test.Module + test.TargetPath  + test.BuildName() + strings.Title(test.Module) + test.FileSuffix
 }
 
 func (base *Base) Write(file string, content string) (bool, error) {
@@ -278,6 +289,18 @@ func (base *Router) Gen() (bool, error) {
 }
 
 func (base *Model) Gen() (bool, error) {
+	file := base.GetTarget()
+
+	content, err1 := base.BuildContent()
+
+	if err1 != nil {
+		return false, err1
+	}
+
+	return base.Write(file, content)
+}
+
+func (base *Test) Gen() (bool, error) {
 	file := base.GetTarget()
 
 	content, err1 := base.BuildContent()

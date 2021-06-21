@@ -43,7 +43,7 @@ func NewProject(config Config) Project {
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
 			TargetPath:   "/",
-			TemplateFile: "/assets/",
+			TemplateFile: "assets/",
 			FileSuffix:   "",
 			Config:       config,
 		},
@@ -59,7 +59,7 @@ func NewService(config Config) *Service {
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
 			TargetPath:   "/service/",
-			TemplateFile: "/assets/code_template/service.tpl",
+			TemplateFile: "assets/code_template/service.tpl",
 			FileSuffix:   "Service.go",
 			Config:       config,
 		},
@@ -93,7 +93,7 @@ func NewRouter(config Config) *Router {
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
 			TargetPath:   "/router/",
-			TemplateFile: "/assets/code_template/router.tpl",
+			TemplateFile: "assets/code_template/router.tpl",
 			FileSuffix:   "Router.go",
 			Config:       config,
 		},
@@ -113,7 +113,7 @@ func NewModel(config Config) *Model {
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
 			TargetPath:   "/model/",
-			TemplateFile: "/assets/code_template/model.tpl",
+			TemplateFile: "assets/code_template/model.tpl",
 			FileSuffix:   "Model.go",
 			Config:       config,
 		},
@@ -136,7 +136,7 @@ func NewTest(config Config, module string) *Test {
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
 			TargetPath:   "/",
-			TemplateFile: "/assets/code_template/test.tpl",
+			TemplateFile: "assets/code_template/test.tpl",
 			FileSuffix:   "_test.go",
 			Config:       config,
 		},
@@ -182,11 +182,11 @@ func (base *Base) BuildName() string {
 }
 
 func (base *Base) BuildContent() (string, error) {
-	return util.ParseTemplate(base.Config.Path+base.TemplateFile, nil)
+	return util.ParseTemplateFromAssets(base.TemplateFile, nil)
 }
 
 func (service *Service) BuildContent() (string, error) {
-	return util.ParseTemplate(service.Config.Path+service.TemplateFile, &ServiceTemplateData{
+	return util.ParseTemplateFromAssets(service.TemplateFile, &ServiceTemplateData{
 		TemplateData{
 			Author: service.Config.Author,
 			Date:   service.Date,
@@ -196,7 +196,7 @@ func (service *Service) BuildContent() (string, error) {
 }
 
 func (model *Model) BuildContent() (string, error) {
-	return util.ParseTemplate(model.Config.Path+model.TemplateFile, &ModelTemplateData{
+	return util.ParseTemplateFromAssets(model.TemplateFile, &ModelTemplateData{
 		TemplateData: TemplateData{
 			Author: model.Config.Author,
 			Date:   model.Date,
@@ -207,7 +207,7 @@ func (model *Model) BuildContent() (string, error) {
 }
 
 func (router *Router) BuildContent() (string, error) {
-	return util.ParseTemplate(router.Config.Path+router.TemplateFile, &RouterTemplateData{
+	return util.ParseTemplateFromAssets(router.TemplateFile, &RouterTemplateData{
 		TemplateData{
 			Author: router.Config.Author,
 			Date:   router.Date,
@@ -217,7 +217,7 @@ func (router *Router) BuildContent() (string, error) {
 }
 
 func (test *Test) BuildContent() (string, error) {
-	return util.ParseTemplate(test.Config.Path+test.TemplateFile, &TestTemplateData{
+	return util.ParseTemplateFromAssets(test.TemplateFile, &TestTemplateData{
 		TemplateData: TemplateData{
 			Author: test.Config.Author,
 			Date:   test.Date,

@@ -5,12 +5,28 @@ ENV GOPROXY=https://goproxy.cn,https://goproxy.io,direct \
     GO111MODULE=on \
     CGO_ENABLED=1
 
+ENV CLIENT_ZIP instantclient-basic-linux.x64-11.2.0.4.0.zip
+ENV CLIENT_FOLDER instantclient_11_2
+ENV CLIENT_FILEPATH /usr/lib/instantclient_11_2
+ENV USR_LIB /usr/lib
+
 WORKDIR /golang
 
 COPY . .
-#ADD https://github.com/pwnlabs/oracle-instantclient/raw/master/instantclient-basic-linux.x64-11.2.0.4.0.zip .
+#ADD https://github.com/f00b4r/oracle-instantclient/blob/master/instantclient-basic-linux-11.2.0.4.0.zip .
 
 #set oracle path and build go app
 RUN sed -i "s@http://deb.debian.org@https://mirrors.aliyun.com@g" /etc/apt/sources.list && \
-    apt-get clean && apt-get update && \
-    go env -w GOPROXY=https://goproxy.cn,https://goproxy.io,direct
+    apt-get clean && apt-get update && apt-get install -y libaio-dev unzip && \
+    unzip ${CLIENT_ZIP} && \
+    mv ${CLIENT_FOLDER} ${USR_LIB}/ && \
+    # rm ${CLIENT_ZIP} && \
+    ln -s ${CLIENT_FILEPATH}/libclntsh.so.11.1 ${USR_LIB}/libclntsh.so && \
+    ln -s ${CLIENT_FILEPATH}/libocci.so.11.1 ${USR_LIB}/libocci.so && \
+    ln -s ${CLIENT_FILEPATH}/libociei.so ${USR_LIB}/libociei.so && \
+    ln -s ${CLIENT_FILEPATH}/libnnz11.so ${USR_LIB}/libnnz11.so && \
+    ln -s ${USR_LIB}/libnsl.so.2 ${USR_LIB}/libnsl.so.1 && \
+    ln -s /lib/libc.so.6 ${USR_LIB}/libresolv.so.2 && \
+    ln -s /lib64/ld-linux-x86-64.so.2 ${USR_LIB}/ld-linux-x86-64.so.2
+
+ENTRYPOINT ["air", "-c", "/golang/.air.toml"]

@@ -1,0 +1,84 @@
+system:
+  addr: 8888
+  db-type: 'oracle'
+  oss-type: 'local'
+  use-multipoint: true
+
+mysql:
+  path: '127.0.0.1:3306'
+  config: 'charset=utf8mb4&parseTime=True&loc=Local'
+  db-name: 'dbuser'
+  username: 'root'
+  password: 'root'
+  max-idle-conns: 1000
+  max-open-conns: 2000
+  log-mode: true
+
+oracle:
+  path: '193.100.100.43:1521'
+  db-name: 'ORCL'
+  username: 'dw'
+  password: 'sirc1234'
+  max-idle-conns: 1000
+  max-open-conns: 2000
+  log-mode: true
+
+dameng:
+  path: '193.100.100.221:5236'
+  config: 'autoCommit=true&parseTime=true'
+  username: 'sysdba'
+  password: 'dameng123!'
+  max-idle-conns: 1000
+  max-open-conns: 2000
+  log-mode: true
+
+redis:
+  db: 10
+  addr: '193.100.100.241:6379' #'127.0.0.1:6379'
+  password: '123qweasdzxc!@#'
+
+# zap logger configuration
+zap:
+  level: 'info'
+  format: 'console'
+  prefix: '[GlobalAdmin]'
+  directory: 'log'
+  link-name: 'latest_log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
+
+# jwt configuration
+jwt:
+  signing-key: 'yer0jwt-key231fds*(wedscdegnb='
+
+#CentralizedAuthorize
+centralized-authorize:
+  #remote-url: 'http://127.0.0.1:9999'
+  remote-url: 'https://193.100.100.241:9999'
+
+# local configuration
+local:
+  upload-path: 'uploads/file'
+  allow-file-ext: 'image/jpeg,image/pjpeg,image/bmp,image/gif,image/png'
+
+# oss
+oss:
+  zone: 'Huadong'
+  bucket: 'xxbucket'
+  img-path: 'http://xxx.com'
+  use-https: false
+  access-key: 'xx'
+  secret-key: 'yy'
+  use-cdn-domains: false
+
+# captcha
+captcha:
+  key-long: 4
+  img-width: 150
+  img-height: 80
+
+#signCheckUrl
+sign-check-url:
+  url : 'http://193.100.100.237:8080/taap/service/signCheck.do'

@@ -9,13 +9,13 @@ import (
 )
 
 type FullConfig struct {
-	SystemConfig               SystemConfig               `mapstructure:"system" json:"system" yaml:"system"`
-	MySqlConfig                MySqlConfig                `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
-	OracleConfig               OracleConfig               `mapstructure:"oracle" json:"oracle" yaml:"oracle"`
-	RedisConfig                RedisConfig                `mapstructure:"redis" json:"redis" yaml:"redis"`
+	SystemConfig SystemConfig `mapstructure:"system" json:"system" yaml:"system"`
+	MySqlConfig  MySqlConfig  `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
+	OracleConfig OracleConfig `mapstructure:"oracle" json:"oracle" yaml:"oracle"`
+	RedisConfig  RedisConfig  `mapstructure:"redis" json:"redis" yaml:"redis"`
 }
 
-func LoadConfig() (FullConfig, error){
+func LoadConfig() (FullConfig, error) {
 	conifgFile := "./config.yaml"
 
 	if !util.CheckFileIsExist(conifgFile) {
@@ -37,9 +37,9 @@ func LoadConfig() (FullConfig, error){
 	// 		fmt.Println(err)
 	// 	}
 	// })
-	var fullConfig FullConfig 
+	var fullConfig FullConfig
 	err = v.Unmarshal(&fullConfig)
-	if ; err != nil {
+	if err != nil {
 		return FullConfig{}, err
 	}
 

@@ -5,7 +5,7 @@ type Column interface {
 }
 
 type ColumnGetter interface {
-	Get(tableName string) (error)
+	Get(tableName string) error
 }
 
 type ModelBuilder interface {

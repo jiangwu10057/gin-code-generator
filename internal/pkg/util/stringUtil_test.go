@@ -2,8 +2,9 @@ package util
 
 import (
 	"gin-code-generator/internal/pkg/util"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUpperFirst(t *testing.T) {

@@ -1,8 +1,8 @@
 package util
 
 import (
-	"gin-code-generator/assets"
 	"bytes"
+	"gin-code-generator/assets"
 	"text/template"
 )
 
@@ -21,7 +21,7 @@ func ParseTemplate(templateFilePath string, data interface{}) (string, error) {
 
 func ParseTemplateFromAssets(templateFilePath string, data interface{}) (string, error) {
 
-	b, err := assets.Asset(templateFilePath)    // 根据地址获取对应内容
+	b, err := assets.Asset(templateFilePath) // 根据地址获取对应内容
 	if err != nil {
 		return "", err
 	}

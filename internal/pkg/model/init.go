@@ -1,6 +1,5 @@
 package model
 
-
 import (
 	"fmt"
 	"log"
@@ -19,7 +18,7 @@ import (
 
 var DB *gorm.DB
 
-func InitOrm(fullConfig config.FullConfig) (error) {
+func InitOrm(fullConfig config.FullConfig) error {
 	dbType := fullConfig.SystemConfig.DbType
 	switch dbType {
 	case "mysql":
@@ -31,7 +30,7 @@ func InitOrm(fullConfig config.FullConfig) (error) {
 	}
 }
 
-func NewOrmConfig() (*gorm.Config)  {
+func NewOrmConfig() *gorm.Config {
 	return &gorm.Config{
 		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
 			SlowThreshold: 1 * time.Millisecond,
@@ -46,7 +45,7 @@ func NewOrmConfig() (*gorm.Config)  {
 	}
 }
 
-func InitMysql(fullConfig config.FullConfig) (error)  {
+func InitMysql(fullConfig config.FullConfig) error {
 	config := fullConfig.MySqlConfig
 	dsn := config.Username + ":" + config.Password + "@tcp(" + config.Path + ")/" + config.Dbname + "?" + config.Config
 	mysqlConfig := mysql.Config{
@@ -63,10 +62,10 @@ func InitMysql(fullConfig config.FullConfig) (error)  {
 	return err
 }
 
-func InitOracle(fullConfig config.FullConfig) (error) {
+func InitOracle(fullConfig config.FullConfig) error {
 	config := fullConfig.OracleConfig
-	
-	dsn := config.Username+"/"+ config.Password+"@"+ config.Path+"/"+ config.Dbname
+
+	dsn := config.Username + "/" + config.Password + "@" + config.Path + "/" + config.Dbname
 	orm, err := gorm.Open(oracle.Open(dsn), NewOrmConfig())
 	DB = orm
 	return err

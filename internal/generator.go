@@ -10,10 +10,10 @@ import (
 )
 
 type Config struct {
-	Module string
-	Name   string
-	Path   string
-	Author string
+	Module   string
+	Name     string
+	Path     string
+	Author   string
 	WithTest bool
 }
 
@@ -145,21 +145,21 @@ func NewTest(config Config, module string) *Test {
 }
 
 // func NewQuick(config Config) {
-	// var newMap []Base{}
-	// for key, value := range []string{"service","model","router"} {
-	// 	switch value:
-	// 		case "service":{
-	// 			newMap = append(newMap, NewService(config))
-	// 		},
-	// 		case "model":{
-	// 			newMap = append(newMap, NewModel(config))
-	// 		},
-	// 		case "router":{
-	// 			newMap = append(newMap, NewRouter(config))
-	// 		}
-	// }
+// var newMap []Base{}
+// for key, value := range []string{"service","model","router"} {
+// 	switch value:
+// 		case "service":{
+// 			newMap = append(newMap, NewService(config))
+// 		},
+// 		case "model":{
+// 			newMap = append(newMap, NewModel(config))
+// 		},
+// 		case "router":{
+// 			newMap = append(newMap, NewRouter(config))
+// 		}
+// }
 
-	// return newMap
+// return newMap
 // }
 
 type TestTemplateData struct {
@@ -232,7 +232,7 @@ func (base *Base) GetTarget() string {
 }
 
 func (test *Test) GetTarget() string {
-	return test.Config.Path + "/" + test.Module + test.TargetPath  + test.BuildName() + strings.Title(test.Module) + test.FileSuffix
+	return test.Config.Path + "/" + test.Module + test.TargetPath + test.BuildName() + strings.Title(test.Module) + test.FileSuffix
 }
 
 func (base *Base) Write(file string, content string) (bool, error) {
@@ -250,7 +250,6 @@ func (base *Base) Write(file string, content string) (bool, error) {
 	_, err1 := io.WriteString(f, content)
 	return err1 == nil, err1
 }
-
 
 func (base *Base) Gen() (bool, error) {
 	file := base.GetTarget()

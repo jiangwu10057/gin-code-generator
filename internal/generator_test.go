@@ -1,12 +1,12 @@
 package internal
 
 import (
-	"os"
-	"time"
 	"gin-code-generator/internal"
-	"github.com/stretchr/testify/assert"
+	"os"
 	"testing"
+	"time"
 
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewProject(t *testing.T) {
@@ -16,7 +16,7 @@ func TestNewProject(t *testing.T) {
 		Path:   "",
 		Author: "",
 	}
-	
+
 	project := internal.NewProject(config)
 	assert.Equal(t, "/", project.TargetPath)
 	assert.Equal(t, "/assets/", project.TemplateFile)
@@ -29,7 +29,7 @@ func TestNewService(t *testing.T) {
 		Path:   "",
 		Author: "",
 	}
-	
+
 	service := internal.NewService(config)
 	assert.Equal(t, "/service/", service.TargetPath)
 	assert.Equal(t, "/assets/code_template/service.tpl", service.TemplateFile)
@@ -42,7 +42,7 @@ func TestNewService(t *testing.T) {
 // 		Path:   "",
 // 		Author: "气昂昂",
 // 	}
-	
+
 // 	service := internal.NewService(config)
 // 	templateData := internal.NewTemplateData(service)
 // 	assert.Equal(t, config.Author, templateData.Author)
@@ -55,7 +55,7 @@ func TestNewRouter(t *testing.T) {
 		Path:   "",
 		Author: "",
 	}
-	
+
 	router := internal.NewRouter(config)
 	assert.Equal(t, "/router/", router.TargetPath)
 	assert.Equal(t, "/assets/code_template/router.tpl", router.TemplateFile)
@@ -68,7 +68,7 @@ func TestNewModel(t *testing.T) {
 		Path:   "",
 		Author: "",
 	}
-	
+
 	model := internal.NewModel(config)
 	assert.Equal(t, "/model/", model.TargetPath)
 	assert.Equal(t, "/assets/code_template/model.tpl", model.TemplateFile)
@@ -81,7 +81,7 @@ func TestNewTest(t *testing.T) {
 		Path:   "",
 		Author: "",
 	}
-	
+
 	test := internal.NewTest(config)
 	assert.Equal(t, "/", test.TargetPath)
 	assert.Equal(t, "/assets/code_template/test.tpl", test.TemplateFile)
@@ -128,7 +128,7 @@ func TestBuildName(t *testing.T) {
 	}
 
 	base := internal.Base{
-		Config: Config,
+		Config:       Config,
 		Date:         "2021/06/18 11:10",
 		TargetPath:   "/router/",
 		TemplateFile: "/assets/code_template/router.tpl",
@@ -171,7 +171,7 @@ func TestServiceBuildContent(t *testing.T) {
 	}
 	var generator internal.Generator
 	generator = internal.NewService(Config)
-	
+
 	content, err := generator.BuildContent()
 	date := time.Now().Format("2006/01/02 15:04")
 	assert.Equal(t, "/**\r\n* @Author test\r\n* @Date  "+date+"\r\n**/\r\npackage service\r\n\r\nimport (\r\n\r\n)\r\n\r\ntype AccountService struct {\r\n}", content)
@@ -187,7 +187,7 @@ func TestModelBuildContent(t *testing.T) {
 	}
 	var generator internal.Generator
 	generator = internal.NewModel(Config)
-	
+
 	content, err := generator.BuildContent()
 	date := time.Now().Format("2006/01/02 15:04")
 	assert.Equal(t, "/**\r\n* @Author test\r\n* @Date  "+date+"\r\n**/\r\npackage model\r\n\r\ntype AccountModel struct {\r\n\r\n}\r\n\r\nfunc (AccountModel) TableName() string {\r\n\treturn \"ACCOUNT\"\r\n}", content)
@@ -203,7 +203,7 @@ func TestRouterBuildContent(t *testing.T) {
 	}
 	var generator internal.Generator
 	generator = internal.NewRouter(Config)
-	
+
 	content, err := generator.BuildContent()
 	date := time.Now().Format("2006/01/02 15:04")
 	assert.Equal(t, "/**\r\n* @Author test\r\n* @Date  "+date+"\r\n**/\r\n\r\npackage router\r\n\r\nimport (\r\n\t\"github.com/gin-gonic/gin\"\r\n)\r\n\r\nfunc AccountRouter(r *gin.RouterGroup) {\r\n\t\r\n}\r\n", content)
@@ -219,7 +219,7 @@ func TestTestBuildContent(t *testing.T) {
 	}
 	var generator internal.Generator
 	generator = internal.NewTest(Config)
-	
+
 	content, err := generator.BuildContent()
 	date := time.Now().Format("2006/01/02 15:04")
 	assert.Equal(t, "/**\r\n* @Author test\r\n* @Date  "+date+"\r\n**/\r\n\r\npackage \r\n\r\nimport (\r\n\t\"testing\"\r\n\t\"github.com/stretchr/testify/assert\"\r\n)\r\n\r\nfunc Test[](t *testing.T){\r\n\r\n}", content)
@@ -252,7 +252,7 @@ func TestWrite(t *testing.T) {
 	target := generator.GetTarget()
 	os.Remove(target)
 	content, _ := generator.BuildContent()
-	result,err := generator.Write(target, content)
+	result, err := generator.Write(target, content)
 	assert.Equal(t, true, result)
 	assert.NoError(t, err)
 }
@@ -268,7 +268,7 @@ func TestGen(t *testing.T) {
 	generator = internal.NewService(Config)
 	target := generator.GetTarget()
 	os.Remove(target)
-	result,err := generator.Gen()
+	result, err := generator.Gen()
 	assert.Equal(t, true, result)
 	assert.NoError(t, err)
 }

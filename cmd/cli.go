@@ -23,60 +23,68 @@ const (
 	ExitWrongUsage        // error in usage
 )
 
-
 func start(config internal.Config) {
 	switch config.Module {
-		case "project":{
+	case "project":
+		{
 			fmt.Println("to be continue")
 			os.Exit(ExitWrongUsage)
 		}
-		case "model":{
+	case "model":
+		{
 			generate(config)
 		}
-		case "service":{
+	case "service":
+		{
 			generate(config)
 		}
-		case "router":{
+	case "router":
+		{
 			generate(config)
 		}
-	    case "quick":{
-			for _,value := range []string{"model", "service", "router"}{
+	case "quick":
+		{
+			for _, value := range []string{"model", "service", "router"} {
 				config.Module = value
 				generate(config)
 			}
 		}
-		default:{
+	default:
+		{
 			fmt.Println("module is unexpected,except values:'project','api','model','service','router','quick'")
 			os.Exit(ExitWrongUsage)
 		}
 	}
 }
 
-func generate(config internal.Config){
+func generate(config internal.Config) {
 	var generator internal.Generator
 
 	switch config.Module {
-		case "model":{
+	case "model":
+		{
 			generator = internal.NewModel(config)
 		}
-		case "service":{
+	case "service":
+		{
 			generator = internal.NewService(config)
 		}
-		case "router":{
+	case "router":
+		{
 			generator = internal.NewRouter(config)
 		}
 	}
 
 	_, err := generator.Init()
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(exitCode)
 	}
 
-	_,err = generator.Gen()
+	_, err = generator.Gen()
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(exitCode)
 	}
@@ -87,14 +95,14 @@ func generate(config internal.Config){
 		generator = internal.NewTest(config, module)
 		_, err = generator.Init()
 
-		if err != nil{
+		if err != nil {
 			fmt.Println(err.Error())
 			os.Exit(exitCode)
 		}
-	
-		_,err = generator.Gen()
-	
-		if err != nil{
+
+		_, err = generator.Gen()
+
+		if err != nil {
 			fmt.Println(err.Error())
 			os.Exit(exitCode)
 		}
@@ -103,13 +111,13 @@ func generate(config internal.Config){
 
 func init() {
 	fullConfig, err := pkgconfig.LoadConfig()
-	if err != nil{
+	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(ExitOk)
 	}
 	err = model.InitOrm(fullConfig)
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(ExitOk)
 	}
@@ -121,20 +129,19 @@ func main() {
 	var getter model.ColumnGetter
 	getter = model.NewOracleColumnGetter()
 	err := operator.SetStrategy(getter).Get(tableName)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(ExitOk)
 	}
 
 	builder := model.NewOracleModelBuilder(tableName, getter)
 	str, err1 := builder.Create()
-	if err1 != nil{
+	if err1 != nil {
 		fmt.Println(err1.Error())
 		os.Exit(ExitOk)
 	}
 
 	fmt.Println(str)
-	
 
 	// fmt.Println(columns)
 	// log.SetFlags(0)
@@ -167,11 +174,10 @@ func main() {
 	// 	flag.Usage()
 	// 	os.Exit(ExitWrongUsage)
 	// }
-	
+
 	// start(config)
-	
+
 	// fmt.Println("ok")
 
-	
 	// os.Exit(exitCode)
 }

@@ -7,11 +7,11 @@ import (
 )
 
 type OracleColumn struct {
-	ColumnName string `gorm:"column:COLUMN_NAME"`
-	DataType string `gorm:"column:DATA_TYPE"`
+	ColumnName  string `gorm:"column:COLUMN_NAME"`
+	DataType    string `gorm:"column:DATA_TYPE"`
 	DataDefualt string `gorm:"column:DATA_DEFAULT"`
-	Comment string
-	IsPrimary bool
+	Comment     string
+	IsPrimary   bool
 }
 
 func (OracleColumn) TableName() string {
@@ -20,7 +20,7 @@ func (OracleColumn) TableName() string {
 
 type OracleColumnComment struct {
 	ColumnName string `gorm:"column:COLUMN_NAME"`
-	Comments string `gorm:"column:COMMENTS"`
+	Comments   string `gorm:"column:COMMENTS"`
 }
 
 func (OracleColumnComment) TableName() string {
@@ -35,7 +35,7 @@ func NewOracleColumnGetter() *OracleColumnGetter {
 	return &OracleColumnGetter{}
 }
 
-func (getter *OracleColumnGetter) Get(tableName string) (error) {
+func (getter *OracleColumnGetter) Get(tableName string) error {
 	tableName = strings.ToUpper(tableName)
 
 	columns, err := getter.getColumns(tableName)
@@ -60,25 +60,25 @@ func (getter *OracleColumnGetter) Get(tableName string) (error) {
 	}
 
 	for index, column := range columns {
-		if column.ColumnName == pkColumn{
+		if column.ColumnName == pkColumn {
 			columns[index].IsPrimary = true
-		}else{
+		} else {
 			columns[index].IsPrimary = false
 		}
-		v,ok := mapObj[column.ColumnName]
+		v, ok := mapObj[column.ColumnName]
 		if ok {
 			columns[index].Comment = v
-		}else{
+		} else {
 			columns[index].Comment = ""
 		}
 	}
-	
+
 	getter.Result = columns
 
 	return nil
 }
 
-func (getter *OracleColumnGetter) getColumnComments(tableName string) ([]OracleColumnComment, error) { 
+func (getter *OracleColumnGetter) getColumnComments(tableName string) ([]OracleColumnComment, error) {
 	var comments []OracleColumnComment
 	err := DB.Find(&comments, "Table_Name=?", tableName).Error
 	return comments, err
@@ -98,13 +98,13 @@ func (getter *OracleColumnGetter) getPrimaryKeys(tableName string) (pk string, e
 
 type OracleModelBuilder struct {
 	TableName string
-	Columns ColumnGetter
+	Columns   ColumnGetter
 }
 
 func NewOracleModelBuilder(tableName string, columns ColumnGetter) *OracleModelBuilder {
 	return &OracleModelBuilder{
-		Columns : columns,
-		TableName : tableName,
+		Columns:   columns,
+		TableName: tableName,
 	}
 }
 
@@ -113,33 +113,33 @@ func (builder *OracleModelBuilder) Create() (string, error) {
 
 	str.WriteString("type " + util.Case2Camel(strings.ToLower(builder.TableName)) + "Model struct {\n")
 
-	for _,column := range builder.Columns.Result {
+	for _, column := range builder.Columns {
 		name := column.ColumnName
 		field := util.Case2Camel(strings.ToLower(name))
 
 		var pk string
-		if column.IsPrimary{
+		if column.IsPrimary {
 			pk = "primary_key;"
-		}else{
+		} else {
 			pk = ""
 		}
 
-		line := "	" + field + "	" + builder.coverColumnType(column.DataType) + "`gorm:\"column:" + name + ";" + pk + "comment:" + column.Comment + 
+		line := "	" + field + "	" + builder.coverColumnType(column.DataType) + "`gorm:\"column:" + name + ";" + pk + "comment:" + column.Comment +
 			"\" json:\"" + field + "\"`	//" + column.Comment + "\n"
-		
+
 		str.WriteString(line)
 	}
 	str.WriteString("}")
 
 	return str.String(), nil
-	
+
 }
 
-func (builder *OracleModelBuilder) coverColumnType(t string) (string){
-	switch t{
-	case "NVARCHAR2","NCHAR","VARCHAR","VARCHAR2","BLOB","CLOB","BFILE":
+func (builder *OracleModelBuilder) coverColumnType(t string) string {
+	switch t {
+	case "NVARCHAR2", "NCHAR", "VARCHAR", "VARCHAR2", "BLOB", "CLOB", "BFILE":
 		return "string"
-	case "NUMBER","INTEGER": // 有风险 number类型有可能是浮点数
+	case "NUMBER", "INTEGER": // 有风险 number类型有可能是浮点数
 		return "int"
 	case "DATE":
 		return "time.Time"
@@ -148,6 +148,3 @@ func (builder *OracleModelBuilder) coverColumnType(t string) (string){
 		return ""
 	}
 }
-
-
-

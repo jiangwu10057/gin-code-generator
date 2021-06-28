@@ -2,6 +2,8 @@ package internal
 
 import (
 	"errors"
+	"fmt"
+	_model "gin-code-generator/internal/pkg/model"
 	"gin-code-generator/internal/pkg/util"
 	"io"
 	"os"
@@ -15,6 +17,7 @@ type Config struct {
 	Path     string
 	Author   string
 	WithTest bool
+	WithCurd bool
 }
 
 type Generator interface {
@@ -123,7 +126,7 @@ func NewModel(config Config) *Model {
 type ModelTemplateData struct {
 	TemplateData
 	TableName string
-	//struct 可以用https://github.com/Shelnutt2/db2struct生成
+	Fields    string
 }
 
 type Test struct {
@@ -196,14 +199,30 @@ func (service *Service) BuildContent() (string, error) {
 }
 
 func (model *Model) BuildContent() (string, error) {
-	return util.ParseTemplateFromAssets(model.TemplateFile, &ModelTemplateData{
+	tableName := strings.ToUpper(model.Config.Name)
+	fields, err := model.BuildFieldString(tableName)
+	if err != nil {
+		return "", err
+	}
+
+	data := &ModelTemplateData{
 		TemplateData: TemplateData{
 			Author: model.Config.Author,
 			Date:   model.Date,
 			Name:   model.BuildName(),
 		},
-		TableName: strings.ToUpper(model.Config.Name),
-	})
+		TableName: tableName,
+		Fields:    fields,
+	}
+
+	fmt.Println(data)
+
+	return util.ParseTemplateFromAssets(model.TemplateFile, data)
+}
+
+func (model *Model) BuildFieldString(tableName string) (string, error) {
+	builder := _model.NewOracleModelFieldsBuilder(tableName)
+	return builder.Create()
 }
 
 func (router *Router) BuildContent() (string, error) {
@@ -291,6 +310,8 @@ func (base *Model) Gen() (bool, error) {
 	file := base.GetTarget()
 
 	content, err1 := base.BuildContent()
+
+	fmt.Println(content)
 
 	if err1 != nil {
 		return false, err1

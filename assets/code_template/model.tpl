@@ -5,7 +5,7 @@
 package model
 
 type {{.Name}}Model struct {
-
+{{.Fields}}
 }
 
 func ({{.Name}}Model) TableName() string {

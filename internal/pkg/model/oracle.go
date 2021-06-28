@@ -42,6 +42,7 @@ func (getter *OracleColumnGetter) Get(tableName string) error {
 	if err != nil {
 		return err
 	}
+
 	comments, err1 := getter.getColumnComments(tableName)
 
 	if err1 != nil {
@@ -54,6 +55,12 @@ func (getter *OracleColumnGetter) Get(tableName string) error {
 		return err2
 	}
 
+	getter.merge(columns, comments, pkColumn)
+
+	return nil
+}
+
+func (getter *OracleColumnGetter) merge(columns []OracleColumn, comments []OracleColumnComment, pkColumn string) {
 	mapObj := map[string]string{}
 	for _, comment := range comments {
 		mapObj[comment.ColumnName] = comment.Comments
@@ -74,8 +81,6 @@ func (getter *OracleColumnGetter) Get(tableName string) error {
 	}
 
 	getter.Result = columns
-
-	return nil
 }
 
 func (getter *OracleColumnGetter) getColumnComments(tableName string) ([]OracleColumnComment, error) {
@@ -96,24 +101,40 @@ func (getter *OracleColumnGetter) getPrimaryKeys(tableName string) (pk string, e
 	return pk, err
 }
 
-type OracleModelBuilder struct {
-	TableName string
-	Columns   ColumnGetter
+func (getter *OracleColumnGetter) GetResults() []OracleColumn {
+	return getter.Result
 }
 
-func NewOracleModelBuilder(tableName string, columns ColumnGetter) *OracleModelBuilder {
-	return &OracleModelBuilder{
-		Columns:   columns,
+type OracleModelFieldsBuilder struct {
+	TableName string
+}
+
+func NewOracleModelFieldsBuilder(tableName string) *OracleModelFieldsBuilder {
+	return &OracleModelFieldsBuilder{
 		TableName: tableName,
 	}
 }
 
-func (builder *OracleModelBuilder) Create() (string, error) {
+func (builder *OracleModelFieldsBuilder) getColumns() ([]OracleColumn, error) {
+	getter := NewOracleColumnGetter()
+	err := getter.Get(builder.TableName)
+	if err != nil {
+		return []OracleColumn{}, err
+	}
+
+	return getter.GetResults(), nil
+}
+
+func (builder *OracleModelFieldsBuilder) Create() (string, error) {
 	var str strings.Builder
 
-	str.WriteString("type " + util.Case2Camel(strings.ToLower(builder.TableName)) + "Model struct {\n")
+	columns, err := builder.getColumns()
 
-	for _, column := range builder.Columns {
+	if err != nil {
+		return "", err
+	}
+
+	for _, column := range columns {
 		name := column.ColumnName
 		field := util.Case2Camel(strings.ToLower(name))
 
@@ -129,13 +150,12 @@ func (builder *OracleModelBuilder) Create() (string, error) {
 
 		str.WriteString(line)
 	}
-	str.WriteString("}")
 
 	return str.String(), nil
 
 }
 
-func (builder *OracleModelBuilder) coverColumnType(t string) string {
+func (builder *OracleModelFieldsBuilder) coverColumnType(t string) string {
 	switch t {
 	case "NVARCHAR2", "NCHAR", "VARCHAR", "VARCHAR2", "BLOB", "CLOB", "BFILE":
 		return "string"

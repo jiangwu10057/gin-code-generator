@@ -25,3 +25,17 @@ func TestCase2Camel(t *testing.T) {
 	result = util.Case2Camel(source)
 	assert.Equal(t, result, target)
 }
+
+func TestReplaceAll(t *testing.T) {
+	source := "auth_center_auth_center"
+	target := "authcenterauthcenter"
+	result := util.ReplaceAll(source, "_", "")
+	assert.Equal(t, result, target)
+}
+
+func TestLowerFirst(t *testing.T) {
+	source := "ASDASJDHASKD"
+	target := "aSDASJDHASKD"
+	result := util.LowerFirst(source)
+	assert.Equal(t, result, target)
+}

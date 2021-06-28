@@ -1,4 +1,5 @@
 /**
+* @Description {{.TableName}}表结构体
 * @Author {{.Author}}
 * @Date  {{.Date}}
 **/

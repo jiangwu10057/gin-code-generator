@@ -33,51 +33,26 @@ func start(config internal.Config) {
 			fmt.Println("to be continue")
 			os.Exit(ExitWrongUsage)
 		}
-	case "model":
-		{
-			generate(config)
-		}
-	case "service":
-		{
-			generate(config)
-		}
-	case "router":
+	case "model", "service", "router", "api":
 		{
 			generate(config)
 		}
 	case "quick":
 		{
-			for _, value := range []string{"model", "service", "router"} {
+			for _, value := range []string{"model", "service", "router", "api"} {
 				config.Module = value
 				generate(config)
 			}
 		}
 	default:
 		{
-			fmt.Println("module is unexpected,except values:'project','api','model','service','router','quick'")
+			fmt.Println("module is unexpected,except values:'project','api','model','service','router','api','quick'")
 			os.Exit(ExitWrongUsage)
 		}
 	}
 }
 
-func generate(config internal.Config) {
-	var generator internal.Generator
-
-	switch config.Module {
-	case "model":
-		{
-			generator = internal.NewModel(config)
-		}
-	case "service":
-		{
-			generator = internal.NewService(config)
-		}
-	case "router":
-		{
-			generator = internal.NewRouter(config)
-		}
-	}
-
+func doGenerate(generator internal.Generator) {
 	_, err := generator.Init()
 
 	if err != nil {
@@ -91,24 +66,42 @@ func generate(config internal.Config) {
 		fmt.Println(err.Error())
 		os.Exit(exitCode)
 	}
+}
+
+func generate(config internal.Config) {
+	var generator internal.Generator
+
+	switch config.Module {
+	case "model":
+		{
+			generator = internal.NewModel(config)
+
+			if config.WithCurd {
+				doGenerate(internal.NewRequestModel(config))
+				doGenerate(internal.NewResponseModel(config))
+			}
+		}
+	case "service":
+		{
+			generator = internal.NewService(config)
+		}
+	case "router":
+		{
+			generator = internal.NewRouter(config)
+		}
+	case "api":
+		{
+			generator = internal.NewApi(config)
+		}
+	}
+
+	doGenerate(generator)
 
 	if config.WithTest {
 		module := config.Module
 		config.Module = "test"
 		generator = internal.NewTest(config, module)
-		_, err = generator.Init()
-
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(exitCode)
-		}
-
-		_, err = generator.Gen()
-
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(exitCode)
-		}
+		doGenerate(generator)
 	}
 }
 
@@ -139,12 +132,14 @@ func main() {
 	pwd, _ := os.Getwd()
 	author, _ := os.Hostname()
 
-	flag.StringVar(&config.Module, "module", "project", "which module you want to generate.\noption:'project','model','service','router','quick'")
+	flag.StringVar(&config.Module, "module", "project", "which module you want to generate.\noption:'project','model','service','router','api','quick'")
 	flag.StringVar(&config.Path, "path", pwd, "project root path,default is current path")
 	flag.StringVar(&config.Author, "author", author, "code author,default is computer name")
 	flag.StringVar(&config.Name, "name", "", "name for module")
+	flag.StringVar(&config.ApiVersion, "apiv", "", "api version")
+	flag.StringVar(&config.Tags, "tags", "", "\"tags\" for api swagger notes")
 	flag.BoolVar(&config.WithTest, "withtest", false, "do you want to generate test file in the same time?defualt is no")
-	flag.BoolVar(&config.WithCurd, "withCurd", false, "do you want to generate CURD API in the same time?defualt is no")
+	flag.BoolVar(&config.WithCurd, "withcurd", false, "do you want to generate CURD API in the same time?defualt is no")
 	showVersion := flag.Bool("v", false, "print version")
 
 	flag.Parse()

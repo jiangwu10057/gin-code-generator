@@ -16,3 +16,7 @@
 bin
 tmp
 bindata.go
+api
+model/
+router
+service

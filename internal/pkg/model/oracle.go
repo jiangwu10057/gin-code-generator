@@ -145,7 +145,7 @@ func (builder *OracleModelFieldsBuilder) Create() (string, error) {
 			pk = ""
 		}
 
-		line := "	" + field + "	" + builder.coverColumnType(column.DataType) + "`gorm:\"column:" + name + ";" + pk + "comment:" + column.Comment +
+		line := "	" + field + "	" + builder.coverColumnType(column.DataType) + " `gorm:\"column:" + name + ";" + pk + "comment:" + column.Comment +
 			"\" json:\"" + field + "\"`	//" + column.Comment + "\n"
 
 		str.WriteString(line)

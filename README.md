@@ -45,17 +45,20 @@ $ go build -o bin/gcg cmd/cli.go
 ### 运行
 
 ```bash
-gcg -author jiangwu10057 -module quick -name auth -withtest   
+gcg -author jiangwu10057 -module quick -name auth -withtest -withcurd -tags swagger接口分组tag -apiv v1
 ```
 
 1. 参数说明
 
 | 名称| 说明|可选值|
 |----------------|------------------|----------------|
-|module|要生成的模块名称|model、router、service、quick（同时生成model、router、service）|
+|module|要生成的模块名称|model、router、service、api、quick（同时生成model、router、service、api）|
 |name|要生成的文件名（可以是表名）||
 |author|代码生成者|默认为计算机名|
 |withtest|是否同时生成单测文件|默认否|
+|withcurd|是否同时生成curd接口|默认否|
+|tags|api接口swagger分组tag||
+|apiv|api版本号||
 
 ## 使用指南
 

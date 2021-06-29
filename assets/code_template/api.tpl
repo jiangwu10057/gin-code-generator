@@ -42,6 +42,7 @@ var {{.LowerName}}Service service.{{.Name}}Service
 func Get{{.Name}}(c *gin.Context) {
 	var r request.Get{{.Name}}Req
 
+	var err error
 	r.Page, err = strconv.Atoi(c.DefaultQuery("page", "1"))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
@@ -86,7 +87,7 @@ func Delete{{.Name}}(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	addOpsOperationLog(c, "", 2, 5) //请修改操作日志文案
+	addOpsOperationLog(c, "", "", 2, 5) //请修改操作日志文案
 	response.OkWithMessage("", c) //请修改返回文案
 }
 
@@ -104,7 +105,7 @@ func addOpsOperationLog(c *gin.Context, detail string, warnInfo string, moduleTy
 		WarnInfo:      warnInfo,
 	}
 	//操作日志
-	err := OpsLoginLogService.OperateLog(OperateLog)
+	err := OpsOperateLogService.OperateLog(OperateLog)
 	if err != nil {
 		global.LOGGER.Error(fmt.Sprintf("操作日志写入失败，%v", err))
 	}
@@ -156,7 +157,7 @@ func Update{{.Name}}(c *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	} else {
-		addOpsOperationLog(c, "", 2, 4)//请修改操作日志文案
+		addOpsOperationLog(c, "", "", 2, 4)//请修改操作日志文案
 		response.OkWithMessage("修改成功", c)
 	}
 }

@@ -28,12 +28,12 @@ func (_ *{{.Name}}Service) Delete{{.Name}}(id string) error {
 }
 
 //新增一条记录
-func (_ *{{.Name}}Service) Create{{.Name}}(info request.Add{{.Name}})  (request.Add{{.Name}}, error) {
+func (_ *{{.Name}}Service) Create{{.Name}}(info request.Add{{.Name}}Req)  (request.Add{{.Name}}Req, error) {
     return info,nil
 }
 
 //更新一条记录
-func (_ *{{.Name}}Service) Update{{.Name}}(r request.Update{{.Name}}) error {
+func (_ *{{.Name}}Service) Update{{.Name}}(r request.Update{{.Name}}Req) error {
 	return nil
 }
 

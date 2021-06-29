@@ -2,7 +2,9 @@
 
 简称gcg
 
-gcg 是一个基于 Go 语言开发的命令工具，可以快捷生成model、router、service文件。
+gcg 是一个基于 Go 语言开发的命令工具，可以快捷生成model、router、service、api文件甚至是整个项目。
+
+我们的目标是1分钟新建一个项目并跑起来,1分钟生成一个接口并可以访问！
 
 
 ## 功能特性
@@ -10,6 +12,7 @@ gcg 是一个基于 Go 语言开发的命令工具，可以快捷生成model、r
 - 生成Model
 - 生成Service
 - 生成Router
+- 生成Api
 
 ## 软件架构
 

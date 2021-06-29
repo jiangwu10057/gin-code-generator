@@ -55,10 +55,18 @@ gcg -author jiangwu10057 -module quick -name auth -withtest -withcurd -tags swag
 |module|要生成的模块名称|model、router、service、api、quick（同时生成model、router、service、api）|
 |name|要生成的文件名（可以是表名）||
 |author|代码生成者|默认为计算机名|
-|withtest|是否同时生成单测文件|默认否|
-|withcurd|是否同时生成curd接口|默认否|
 |tags|api接口swagger分组tag||
 |apiv|api版本号||
+|withtest|是否同时生成单测文件|默认否|
+|withcurd|是否同时生成curd接口|默认否|
+|force|是否强制覆盖旧文件以及创建目录|默认否|
+
+
+2. window运行注意事项
+
+- 下载[instance client](https://oracle.github.io/odpi/doc/installation.html#id1)，并解压
+- 设置环境变量PATH
+- 控制台重启
 
 ## 使用指南
 

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"gin-code-generator/internal/pkg/util"
 	"io"
 	"os"
@@ -17,6 +18,7 @@ type Config struct {
 	Tags       string
 	WithTest   bool
 	WithCurd   bool
+	Force      bool
 }
 
 type Generator interface {
@@ -58,8 +60,36 @@ func (base *Base) BuildContent() (string, error) {
 	return util.ParseTemplateFromAssets(base.TemplateFile, nil)
 }
 
+func (base *Base) forceCreate(path string, file string) error {
+
+	if !util.CheckFileIsExist(path) {
+		err := os.MkdirAll(path, 0666)
+		if err != nil {
+			return err
+		}
+	}
+	if util.CheckFileIsExist(path + file) {
+		err := os.Remove(path + file)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (base *Base) GetTarget() string {
-	return base.Config.Path + base.TargetPath + base.BuildName() + base.FileSuffix
+	path := base.Config.Path + base.TargetPath
+	file := base.BuildName() + base.FileSuffix
+
+	if base.Config.Force {
+		err := base.forceCreate(path, file)
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+	}
+
+	return path + file
 }
 
 func (base *Base) Write(file string, content string) (bool, error) {

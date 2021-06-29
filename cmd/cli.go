@@ -138,6 +138,7 @@ func main() {
 	flag.StringVar(&config.Name, "name", "", "name for module")
 	flag.StringVar(&config.ApiVersion, "apiv", "", "api version")
 	flag.StringVar(&config.Tags, "tags", "", "\"tags\" for api swagger notes")
+	flag.BoolVar(&config.Force, "force", false, "use the option if file exist，it will replace。 and if the path don't exist，it will create")
 	flag.BoolVar(&config.WithTest, "withtest", false, "do you want to generate test file in the same time?defualt is no")
 	flag.BoolVar(&config.WithCurd, "withcurd", false, "do you want to generate CURD API in the same time?defualt is no")
 	showVersion := flag.Bool("v", false, "print version")

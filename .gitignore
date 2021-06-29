@@ -20,3 +20,4 @@ api
 model/
 router
 service
+config.yaml

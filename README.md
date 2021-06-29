@@ -44,6 +44,13 @@ $ go build -o bin/gcg cmd/cli.go
 
 ### 运行
 
+- 新项目
+```bash
+gcg -module project -name project_name -path fullPath
+```
+
+- 生成接口
+
 ```bash
 gcg -author jiangwu10057 -module quick -name auth -withtest -withcurd -tags swagger接口分组tag -apiv v1
 ```
@@ -52,8 +59,8 @@ gcg -author jiangwu10057 -module quick -name auth -withtest -withcurd -tags swag
 
 | 名称| 说明|可选值|
 |----------------|------------------|----------------|
-|module|要生成的模块名称|model、router、service、api、quick（同时生成model、router、service、api）|
-|name|要生成的文件名（可以是表名）||
+|module|要生成的模块|model、router、service、api、quick（同时生成model、router、service、api）|
+|name|项目名或表名||
 |author|代码生成者|默认为计算机名|
 |tags|api接口swagger分组tag||
 |apiv|api版本号||

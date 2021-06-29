@@ -27,11 +27,13 @@ const (
 )
 
 func start(config internal.Config) {
+	if config.WithCurd {
+		_init()
+	}
 	switch config.Module {
 	case "project":
 		{
-			fmt.Println("to be continue")
-			os.Exit(ExitWrongUsage)
+			generate(config)
 		}
 	case "model", "service", "router", "api":
 		{
@@ -72,6 +74,10 @@ func generate(config internal.Config) {
 	var generator internal.Generator
 
 	switch config.Module {
+	case "project":
+		{
+			generator = internal.NewProject(config)
+		}
 	case "model":
 		{
 			generator = internal.NewModel(config)
@@ -105,7 +111,7 @@ func generate(config internal.Config) {
 	}
 }
 
-func init() {
+func _init() {
 	fullConfig, err := pkgconfig.LoadConfig()
 	if err != nil {
 		fmt.Println(err.Error())
@@ -135,12 +141,12 @@ func main() {
 	flag.StringVar(&config.Module, "module", "project", "which module you want to generate.\noption:'project','model','service','router','api','quick'")
 	flag.StringVar(&config.Path, "path", pwd, "project root path,default is current path")
 	flag.StringVar(&config.Author, "author", author, "code author,default is computer name")
-	flag.StringVar(&config.Name, "name", "", "name for module")
+	flag.StringVar(&config.Name, "name", "", "module name or project name")
 	flag.StringVar(&config.ApiVersion, "apiv", "", "api version")
-	flag.StringVar(&config.Tags, "tags", "", "\"tags\" for api swagger notes")
-	flag.BoolVar(&config.Force, "force", false, "use the option if file exist，it will replace。 and if the path don't exist，it will create")
-	flag.BoolVar(&config.WithTest, "withtest", false, "do you want to generate test file in the same time?defualt is no")
-	flag.BoolVar(&config.WithCurd, "withcurd", false, "do you want to generate CURD API in the same time?defualt is no")
+	flag.StringVar(&config.Tags, "tags", "", "\"tags\" is api swagger notes")
+	flag.BoolVar(&config.Force, "force", false, "use the option if file exist,it will replace. and if the path don't exist,it will create.")
+	flag.BoolVar(&config.WithTest, "withtest", false, "do you want to generate test file in the same time ? default is no")
+	flag.BoolVar(&config.WithCurd, "withcurd", false, "do you want to generate CURD API in the same time ? default is no")
 	showVersion := flag.Bool("v", false, "print version")
 
 	flag.Parse()

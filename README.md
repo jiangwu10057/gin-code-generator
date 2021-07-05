@@ -6,6 +6,7 @@ gcg 是一个基于 Go 语言开发的命令工具，可以快捷生成model、r
 
 我们的目标是1分钟新建一个项目并跑起来,1分钟生成一个接口并可以访问！
 
+本生成器使用的[项目规范](#项目规范)
 
 ## 功能特性
 
@@ -16,6 +17,34 @@ gcg 是一个基于 Go 语言开发的命令工具，可以快捷生成model、r
 
 ## 软件架构
 
+
+## 项目结构说明
+
+## 项目规范
+- api api接口目录
+  - v1 版本目录
+  - 服务名Api.go
+- config 配置
+- core http服务器入口
+- docs swagger接口文档地址
+- global 全局设置
+- initialize 初始化orm、redis等
+- log 日志文件
+- middleware 中间件
+  - 中间件名Middleware.go
+- model 数据库模型
+  - 服务名Model.go
+  - request 请求数据模型
+    - 服务名ReqModel.go
+  - response 返回数据模型
+    - 服务名RespModel.go
+- router 路由
+  - 服务名Router.go
+- service 服务层
+  - 服务名Service.go
+- utils 工具包
+- config.yaml 配置
+- main.go 程序入口
 
 ## 快速开始
 

@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	VERSION  = "0.0.2"
+	VERSION  = "1.0.1"
 	exitCode int
 )
 
@@ -39,6 +39,11 @@ func start(config internal.Config) {
 		{
 			generate(config)
 		}
+	case "struct":
+		{
+			_init()
+			generate(config)
+		}
 	case "quick":
 		{
 			for _, value := range []string{"model", "service", "router", "api"} {
@@ -48,7 +53,7 @@ func start(config internal.Config) {
 		}
 	default:
 		{
-			fmt.Println("module is unexpected,except values:'project','api','model','service','router','api','quick'")
+			fmt.Println("module is unexpected,except values:'project','api','model','service','router','api','quick','struct'")
 			os.Exit(ExitWrongUsage)
 		}
 	}
@@ -99,6 +104,10 @@ func generate(config internal.Config) {
 		{
 			generator = internal.NewApi(config)
 		}
+	case "struct":
+		{
+			generator = internal.NewTableStruct(config)
+		}
 	}
 
 	doGenerate(generator)
@@ -138,7 +147,7 @@ func main() {
 	pwd, _ := os.Getwd()
 	author, _ := os.Hostname()
 
-	flag.StringVar(&config.Module, "module", "project", "which module you want to generate.\noption:'project','model','service','router','api','quick'")
+	flag.StringVar(&config.Module, "module", "project", "which module you want to generate.\noption:'project','model','service','router','api','quick','struct'")
 	flag.StringVar(&config.Path, "path", pwd, "project root path,default is current path")
 	flag.StringVar(&config.Author, "author", author, "code author,default is computer name")
 	flag.StringVar(&config.Name, "name", "", "module name or project name")

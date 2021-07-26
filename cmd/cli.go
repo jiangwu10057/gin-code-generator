@@ -27,21 +27,14 @@ const (
 )
 
 func start(config internal.Config) {
-	if config.WithCurd {
-		_init()
-	}
+	_init()
 	switch config.Module {
 	case "project":
 		{
 			generate(config)
 		}
-	case "model", "service", "router", "api":
+	case "service", "router", "api", "model", "struct":
 		{
-			generate(config)
-		}
-	case "struct":
-		{
-			_init()
 			generate(config)
 		}
 	case "quick":

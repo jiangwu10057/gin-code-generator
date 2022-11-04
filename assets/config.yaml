@@ -1,0 +1,31 @@
+system:
+  db-type: 'postgreSQL'
+
+postgreSQL:
+  host: 'localhost'
+  port: '5432'
+  db-name: ''
+  username: ''
+  password: ''
+  max-idle-conns: 1000
+  max-open-conns: 2000
+  log-mode: true
+
+mysql:
+  path: 'localhost:3306'
+  config: 'charset=utf8mb4&parseTime=True&loc=Local'
+  db-name: ''
+  username: ''
+  password: ''
+  max-idle-conns: 1000
+  max-open-conns: 2000
+  log-mode: true
+
+oracle:
+  path: 'localhost:1521'
+  db-name: ''
+  username: ''
+  password: ''
+  max-idle-conns: 1000
+  max-open-conns: 2000
+  log-mode: true

@@ -74,6 +74,9 @@ $ go-bindata -pkg=assets -o=assets/bindata.go assets/...
 $ go build -o bin/gcg cmd/cli.go
 ```
 
+## 项目配置文件
+- [模板](./assets/config.yaml)
+
 ### 运行
 
 - 新项目

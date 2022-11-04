@@ -9,10 +9,11 @@ import (
 )
 
 type FullConfig struct {
-	SystemConfig SystemConfig `mapstructure:"system" json:"system" yaml:"system"`
-	MySqlConfig  MySqlConfig  `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
-	OracleConfig OracleConfig `mapstructure:"oracle" json:"oracle" yaml:"oracle"`
-	RedisConfig  RedisConfig  `mapstructure:"redis" json:"redis" yaml:"redis"`
+	SystemConfig     SystemConfig     `mapstructure:"system" json:"system" yaml:"system"`
+	MySqlConfig      MySqlConfig      `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
+	PostgreSQLConfig PostgreSQLConfig `mapstructure:"postgreSQL" json:"postgreSQL" yaml:"postgreSQL"`
+	OracleConfig     OracleConfig     `mapstructure:"oracle" json:"oracle" yaml:"oracle"`
+	RedisConfig      RedisConfig      `mapstructure:"redis" json:"redis" yaml:"redis"`
 }
 
 func LoadConfig() (FullConfig, error) {
@@ -29,14 +30,6 @@ func LoadConfig() (FullConfig, error) {
 		return FullConfig{}, err
 	}
 
-	// v.WatchConfig()
-
-	// v.OnConfigChange(func(e fsnotify.Event) {
-	// 	fmt.Println("config file changed:", e.Name)
-	// 	if err := v.Unmarshal(&global.SERVER_CONFIG); err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// })
 	var fullConfig FullConfig
 	err = v.Unmarshal(&fullConfig)
 	if err != nil {

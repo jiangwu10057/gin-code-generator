@@ -10,8 +10,20 @@ type MySqlConfig struct {
 	MaxOpenConns int    `mapstructure:"max-open-conns" json:"max-open-conns" yaml:"max-open-conns"`
 	LogMode      bool   `mapstructure:"log-mode" json:"log-mode" yaml:"log-mode"`
 }
+
 type OracleConfig struct {
 	Path         string `mapstructure:"path" json:"path" yaml:"path"`
+	Dbname       string `mapstructure:"db-name" json:"db-name" yaml:"db-name"`
+	Username     string `mapstructure:"username" json:"username" yaml:"username"`
+	Password     string `mapstructure:"password" json:"password" yaml:"password"`
+	MaxIdleConns int    `mapstructure:"max-idle-conns string" json:"max-idle-conns string" yaml:"max-idle-conns string"`
+	MaxOpenConns int    `mapstructure:"max-open-conns" json:"max-open-conns" yaml:"max-open-conns"`
+	LogMode      bool   `mapstructure:"log-mode" json:"log-mode" yaml:"log-mode"`
+}
+
+type PostgreSQLConfig struct {
+	Host         string `mapstructure:"host" json:"host" yaml:"host"`
+	Port         string `mapstructure:"port" json:"port" yaml:"port"`
 	Dbname       string `mapstructure:"db-name" json:"db-name" yaml:"db-name"`
 	Username     string `mapstructure:"username" json:"username" yaml:"username"`
 	Password     string `mapstructure:"password" json:"password" yaml:"password"`

@@ -19,6 +19,8 @@ var (
 	exitCode int
 )
 
+var FullConfig pkgconfig.FullConfig
+
 // Possible exit status codes.
 const (
 	ExitOk         = iota // nothing has changed or needs to change
@@ -78,11 +80,11 @@ func generate(config internal.Config) {
 		}
 	case "model":
 		{
-			generator = internal.NewModel(config)
+			generator = internal.NewModel(config, FullConfig.SystemConfig.DbType)
 
 			if config.WithCurd {
-				doGenerate(internal.NewRequestModel(config))
-				doGenerate(internal.NewResponseModel(config))
+				doGenerate(internal.NewRequestModel(config, FullConfig.SystemConfig.DbType))
+				doGenerate(internal.NewResponseModel(config, FullConfig.SystemConfig.DbType))
 			}
 		}
 	case "service":
@@ -114,12 +116,13 @@ func generate(config internal.Config) {
 }
 
 func _init() {
-	fullConfig, err := pkgconfig.LoadConfig()
+	var err error
+	FullConfig, err = pkgconfig.LoadConfig()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(ExitOk)
 	}
-	err = model.InitOrm(fullConfig)
+	err = model.InitOrm(FullConfig)
 
 	if err != nil {
 		fmt.Println(err.Error())

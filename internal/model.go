@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	_model "gin-code-generator/internal/pkg/model"
 	"gin-code-generator/internal/pkg/util"
 	"strings"
@@ -9,6 +10,7 @@ import (
 
 type Model struct {
 	Base
+	dbtype string
 }
 
 type ModelTemplateData struct {
@@ -17,7 +19,7 @@ type ModelTemplateData struct {
 	Fields    string
 }
 
-func NewModel(config Config) *Model {
+func NewModel(config Config, dbtype string) *Model {
 	return &Model{
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
@@ -26,10 +28,11 @@ func NewModel(config Config) *Model {
 			FileSuffix:   "Model.go",
 			Config:       config,
 		},
+		dbtype,
 	}
 }
 
-func NewRequestModel(config Config) *Model {
+func NewRequestModel(config Config, dbtype string) *Model {
 	return &Model{
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
@@ -38,10 +41,11 @@ func NewRequestModel(config Config) *Model {
 			FileSuffix:   "Model.go",
 			Config:       config,
 		},
+		dbtype,
 	}
 }
 
-func NewResponseModel(config Config) *Model {
+func NewResponseModel(config Config, dbtype string) *Model {
 	return &Model{
 		Base{
 			Date:         time.Now().Format("2006/01/02 15:04"),
@@ -50,11 +54,19 @@ func NewResponseModel(config Config) *Model {
 			FileSuffix:   "Model.go",
 			Config:       config,
 		},
+		dbtype,
 	}
 }
 
 func (model *Model) BuildContent() (string, error) {
-	tableName := strings.ToUpper(model.Config.Name)
+	var tableName string
+	switch model.dbtype {
+	case "oracle":
+		tableName = strings.ToUpper(model.Config.Name)
+	default:
+		tableName = model.Config.Name
+	}
+
 	fields, err := model.BuildFieldString(tableName)
 	if err != nil {
 		return "", err
@@ -74,8 +86,15 @@ func (model *Model) BuildContent() (string, error) {
 }
 
 func (model *Model) BuildFieldString(tableName string) (string, error) {
-	builder := _model.NewOracleModelFieldsBuilder(tableName)
-	return builder.Create()
+	fmt.Println(model.dbtype)
+	switch model.dbtype {
+	case "oracle":
+		return _model.NewOracleModelFieldsBuilder(tableName).Create()
+	case "postgreSQL":
+		return _model.NewPostgresModelColumnsBuilder(tableName).Create()
+	default:
+		return _model.NewMysqlModelColumnsBuilder("", tableName).Create()
+	}
 }
 
 func (model *Model) Gen() (bool, error) {

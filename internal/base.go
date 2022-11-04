@@ -103,8 +103,13 @@ func (base *Base) Write(file string, content string) (bool, error) {
 		return false, err
 	}
 
-	_, err1 := io.WriteString(f, content)
-	return err1 == nil, err1
+	_, err = io.WriteString(f, content)
+
+	if err == nil {
+		util.GoFileFormat(file)
+	}
+
+	return err == nil, err
 }
 
 func (base *Base) Gen() (bool, error) {

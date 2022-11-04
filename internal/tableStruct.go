@@ -20,6 +20,7 @@ func NewTableStruct(config Config) *TableStruct {
 				FileSuffix:   "Service.go",
 				Config:       config,
 			},
+			"",
 		},
 	}
 }

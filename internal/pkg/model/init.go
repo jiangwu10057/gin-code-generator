@@ -9,6 +9,7 @@ import (
 	"github.com/cengsin/oracle"
 
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -25,8 +26,10 @@ func InitOrm(fullConfig config.FullConfig) error {
 		return InitMysql(fullConfig)
 	case "oracle":
 		return InitOracle(fullConfig)
+	case "postgreSQL":
+		return InitPostgresql(fullConfig)
 	default:
-		return fmt.Errorf("db-type只支持配置:oracle,mysql")
+		return fmt.Errorf("db-type只支持配置:oracle,mysql,postgreSQL")
 	}
 }
 
@@ -67,6 +70,18 @@ func InitOracle(fullConfig config.FullConfig) error {
 
 	dsn := config.Username + "/" + config.Password + "@" + config.Path + "/" + config.Dbname
 	orm, err := gorm.Open(oracle.Open(dsn), NewOrmConfig())
+	DB = orm
+	return err
+}
+
+func InitPostgresql(fullConfig config.FullConfig) error {
+	config := fullConfig.PostgreSQLConfig
+
+	dsn := "user=" + config.Username + " password=" + config.Password + " dbname=" + config.Dbname + " host=" + config.Host + " port=" + config.Port + " sslmode=disable TimeZone=Asia/Shanghai"
+	orm, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: true, // disables implicit prepared statement usage
+	}), NewOrmConfig())
 	DB = orm
 	return err
 }

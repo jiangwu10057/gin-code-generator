@@ -52,7 +52,7 @@ gcg 是一个基于 Go 语言开发的命令工具，可以快捷生成model、r
 
 **Minimum Requirements**
 
-go 1.15
+go 1.17
 
 
 ### 构建

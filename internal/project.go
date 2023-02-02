@@ -79,6 +79,8 @@ func (project *Project) unzip(archive, target string) error {
 		return err
 	}
 
+	defer reader.Close()
+
 	if err := os.MkdirAll(target, 0755); err != nil {
 		return err
 	}

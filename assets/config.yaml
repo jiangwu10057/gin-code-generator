@@ -1,31 +1,82 @@
 system:
-  db-type: 'postgreSQL'
-
-postgreSQL:
-  host: 'localhost'
-  port: '5432'
-  db-name: ''
-  username: ''
-  password: ''
-  max-idle-conns: 1000
-  max-open-conns: 2000
-  log-mode: true
+  env: public #develop
+  addr: 8080
+  db-type: 'oracle'
+  oss-type: 'local'
+  use-multipoint: true
+  scheme: 'http'
+  allow-origins: ['localhost','127.0.0.1']
 
 mysql:
-  path: 'localhost:3306'
+  path: '127.0.0.1:3306'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
   db-name: ''
-  username: ''
-  password: ''
+  username: 'root'
+  password: 'root'
   max-idle-conns: 1000
   max-open-conns: 2000
   log-mode: true
 
 oracle:
-  path: 'localhost:1521'
+  path: ''
   db-name: ''
   username: ''
   password: ''
   max-idle-conns: 1000
   max-open-conns: 2000
   log-mode: true
+
+redis:
+  db: 0
+  addr: '127.0.0.1:6379' #'127.0.0.1:6379'
+  password: ''
+
+# zap logger configuration
+zap:
+  level: 'info'
+  format: 'console'
+  prefix: '[NAMESPACE]'
+  directory: 'log'
+  link-name: 'latest_log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
+
+# jwt configuration
+jwt:
+  signing-key: ''
+  token-expires-seconds: 259200
+#CentralizedAuthorize
+centralized-authorize:
+  remote-url: 'http://127.0.0.1:9999'
+
+# local configuration
+local:
+  upload-path: 'uploads/file'
+  allow-file-ext: 'image/jpeg,image/pjpeg,image/bmp,image/gif,image/png'
+
+# captcha
+captcha:
+  key-long: 4
+  img-width: 150
+  img-height: 80
+
+
+#signCheckUrl
+sign-check-url:
+  url : ''
+
+#oss
+minio:
+  url: ''
+  accessKey: ''
+  secretKey: ''
+  defaultFolder: '/'
+
+security:
+  platform-secret: ""
+
+blackchain:
+  url: 
+  app-key: 
